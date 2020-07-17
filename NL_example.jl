@@ -27,7 +27,7 @@ tree_ancestry=[0 1 1 2 2 3 3]
 #For real datasets you don't have to worry about understanding or using this notation.
 
 #generate a matrix represenation for this tree
-tree_matrix=construct_graph_from_ancestry(nodes_sam)
+tree_matrix=construct_graph_from_ancestry(tree_ancestry)
 
 #Nest we need to specify the systematic component for this we declare a specficiation matrix S
 #S will have dimensions as follows: num_alternatives X num_parameters. S_ij =1 imples that the utility for alternative i includes parameter j multiplied by X_j
