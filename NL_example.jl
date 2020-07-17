@@ -16,7 +16,7 @@ include("NLhelperfunctions.jl")
 # We consider a case with four alternatives where alt 1 and alt 2 are in a nest and alt 3 and alt 4 are in another nest.
 
 num_alternatives=4
-sample_size=3000
+sample_size=5000
 
 #for 4 alternatives there can be atmost 4-2 = 2 nest nodes excluding the root node. see theorem in thesis. You can specify a tree for the monte carlo
 # data generation by specifiying an ancestry vector:
