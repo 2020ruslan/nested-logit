@@ -1,7 +1,7 @@
 
 
 ![Alt text](ONL.png?raw=true "Optimal Nested Logit")
-# nested-logit
+# Introduction
 This package impmments the nested logit strucutre learning algirthim as disscussed in Aboutaleb et al. 2020.
 
 This work is about developing an estimation procedure for nested logit models that optimizes over
@@ -13,3 +13,10 @@ indeed possible to recover the nesting structure directly from the data by apply
 synthetic and real datasets.
 
 For more details: https://dspace.mit.edu/bitstream/handle/1721.1/123208/1129597025-MIT.pdf?sequence=1&isAllowed=y 
+
+# Installation 
+
+
+```julia
+julia> Pkg.add("JuMP")
+```
