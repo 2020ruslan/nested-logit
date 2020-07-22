@@ -2,7 +2,7 @@
 
 ![Alt text](ONL.png?raw=true "Optimal Nested Logit")
 # Introduction
-This package impmments the nested logit strucutre learning algirthim as disscussed in Aboutaleb et al. 2020.
+This package implements the nested logit strucutre learning algirthim as disscussed in Aboutaleb et al. 2020.
 
 This work is about developing an estimation procedure for nested logit models that optimizes over
 the nesting structure in addition to the model parameters. Current estimation practices require
