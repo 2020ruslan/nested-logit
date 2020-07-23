@@ -16,7 +16,47 @@ For more details: https://dspace.mit.edu/bitstream/handle/1721.1/123208/11295970
 
 # Installation 
 
-
+see Installation.pdf
 ```julia
 julia> Pkg.add("JuMP")
 ```
+# Loading data from CSV files 
+
+```julia
+using CSVFiles, DataFrames, CSV
+
+
+main_dataframe=DataFrame(load("Filedirectory/file.csv"))
+
+# filter records by row if needed
+main_dataframe=filter(row -> row[:MODE] <= 6, main_dataframe)
+main_dataframe=filter(row -> row[:MODE] >0, main_dataframe)
+
+n,~=size(main_dataframe)
+
+#transform columns
+main_dataframe[:CAR_TT]=main_dataframe[:CAR_TT]./60
+main_dataframe[:PT_TT]=main_dataframe[:PT_TT]./60
+#main_dataframe=CSV.read("CTPS.csv")
+
+#observed choices
+Y=main_dataframe[:MODE]
+
+#attributes
+X=main_dataframe
+
+
+#split into train and validation
+train_validation_ratio=0.75
+idx = shuffle(1:n)
+train_idx = view(idx, 1:floor(Int, train_validation_ratio*n))
+test_idx = view(idx, (floor(Int, train_validation_ratio*n)+1):n)
+
+
+Y_train=Y[train_idx]
+X_train=X[train_idx,:]
+
+Y_validation=Y[validation_idx]
+X_validation=X[validation_idx,:]
+'''
+
