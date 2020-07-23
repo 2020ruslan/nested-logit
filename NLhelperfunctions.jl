@@ -121,10 +121,10 @@ function draw_tree(x,mu)
     m=dim1+1
     nodes=construct_ancestry(x)
     Tree=DiGraph(convert(Array{Int64},vcat(x,zeros(m,dim2))))
-    labels=["r"]
+    labels=["root"]
     for nest ∈ 2:dim1
         if nodes[nest]>0
-            push!(labels,string("μ= ",mu[nest]))
+            push!(labels,string("μ= ",round(mu[nest],digits=3)))
         else
             push!(labels,"")
         end
@@ -186,6 +186,14 @@ end
 function is_valid_tree(x)
     dim1,dim2=size(x)
     ancestry=construct_ancestry(x)
+
+    for i=1:dim1
+        for j=1:dim2
+            if !isinteger(x[i,j])
+                return false
+            end
+        end
+    end
 
     if sum(x)!=sum(sum(x[i,:])>0 for i=1:dim1)+dim1
         return false
@@ -1635,6 +1643,7 @@ function solveMasterProblem(hyperplanes,upperbounds_list,visited_x,visited_solut
                 x_val[i,j]=callback_value(cb_data,x[i,j])
             end
         end
+
         if is_valid_tree(x_val)
             equivalence_cut(cb_data,x_val)
             depth_cut(cb_data,x_val)
@@ -1725,7 +1734,7 @@ end
 
 function nest_tree_search(S,X,A,Y,X_val,A_val,Y_val,max_iter)
 
-    m,~=size(S)
+    m,p=size(S)
     dim1=m-1
     dim2=dim1+m
 
@@ -1789,8 +1798,32 @@ function nest_tree_search(S,X,A,Y,X_val,A_val,Y_val,max_iter)
         draw_tree(prev_opt_solution,optimal_params[p+1:end,depth,best_of_best_idx])
     end
 
+    best_ll,best_idx=findmin(optimal_ll)
+    opt_tree=optimal_trees[:,:,best_idx]
+    opt_params=optimal_params[:,best_idx]
+    opt_std_errs=optimal_std_errs[:,best_idx]
 
-    return optimal_trees,optimal_ll,optimal_params,optimal_std_errs,counts
+    println("Optimal tree (loglikekihood= ",best_ll,"): ")
+    println("************************************")
+    println("************************************")
+    print_edges(opt_tree)
+    draw_tree(opt_tree,opt_params[p+1:end])
+    println("************************************")
+    println("************************************")
+    println("************************************")
+    println("Model Parameters and (standard errors)")
+    for i=1:p
+        println("|β_",i,"|",opt_params[i],"  (",round(opt_std_errs[i],digits=2),")")
+    end
+    println("Nest scale parameters and (standard errors)")
+    nodes=construct_ancestry(opt_tree)
+    for i=1:dim1
+        if nodes[i]>0
+            println("|μ_",i,"|",opt_params[i+p],"  (",round(opt_std_errs[p+i],digits=1),")")
+        end
+    end
+
+    return opt_tree,opt_params,opt_std_errs,counts
 end
 
 function solve_NLSLP(S,X,A,Y,X_val,A_val,Y_val,max_iter)
@@ -1887,6 +1920,6 @@ function solve_NLSLP(S,X,A,Y,X_val,A_val,Y_val,max_iter)
         end
     end
 
-    return optimal_trees,optimal_ll,optimal_params,optimal_std_errs,counts
+    return opt_val_tree,opt_val_params,opt_val_std_errs,opt_train_tree,opt_train_params,opt_train_std_errs,counts
 
 end
